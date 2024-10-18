@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import './App.css'
 
-function Square({ value, onSquareClick }) {
+interface SquareProps {
+  value: string;
+  onSquareClick: () => void;
+}
+
+function Square({ value, onSquareClick }: SquareProps) {
   return (
     <button className="square" onClick={onSquareClick}>
       {value}
@@ -9,8 +14,14 @@ function Square({ value, onSquareClick }) {
   );
 }
 
-function Board({ xIsNext, squares, onPlay }) {
-  function handleClick(i) {
+interface BoardProps {
+  xIsNext: boolean;
+  squares: string[];
+  onPlay: (nextSquares: string[]) => void;
+}
+
+function Board({ xIsNext, squares, onPlay }: BoardProps) {
+  function handleClick(i: number) {
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
@@ -32,7 +43,7 @@ function Board({ xIsNext, squares, onPlay }) {
   }
 
   return (
-    <div className="container">
+    <>
       <div className="status">{status}</div>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
@@ -49,22 +60,24 @@ function Board({ xIsNext, squares, onPlay }) {
         <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
-    </div>
-  );  
+    </>
+  );
 }
 
 export default function Game() {
-  const [xIsNext, setXIsNext] = useState(true);
   const [history, setHistory] = useState([Array(9).fill(null)]);
-  const currentSquares = history[history.length - 1];
+  const [currentMove, setCurrentMove] = useState(0);
+  const xIsNext = currentMove % 2 === 0;
+  const currentSquares = history[currentMove];
 
-  function handlePlay(nextSquares) {
-    setHistory([...history, nextSquares]);
-    setXIsNext(!xIsNext);
+  function handlePlay(nextSquares: string[]) {
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
   }
 
-  function jumpTo(nextMove) {
-    // TODO
+  function jumpTo(nextMove: number) {
+    setCurrentMove(nextMove);
   }
 
   const moves = history.map((squares, move) => {
@@ -93,7 +106,7 @@ export default function Game() {
   );
 }
 
-function calculateWinner(squares) {
+function calculateWinner(squares: (string | null)[]): string | null {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -112,4 +125,3 @@ function calculateWinner(squares) {
   }
   return null;
 }
-
