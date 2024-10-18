@@ -1,0 +1,94 @@
+/* Reset and base styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Full-page centered layout */
+  body {
+    background: linear-gradient(135deg, #1e1e1e, #0d0d0d);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  /* Container for the board */
+  .container {
+    width: 50vw; /* Much smaller board */
+    max-width: 250px; /* Cap the size at 250px */
+    aspect-ratio: 1 / 1;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Status text */
+  .status {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #0dcaf0;
+    text-shadow: 0 0 6px rgba(13, 202, 240, 0.7);
+    text-align: center;
+  }
+  
+  /* Board row layout */
+  .board-row {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  /* Styling for the squares */
+  .square {
+    flex: 1;
+    margin: 2px; /* Tighter margins */
+    aspect-ratio: 1 / 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-size: 1.5rem; /* Adjusted font size */
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s;
+  }
+  
+  .square:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Media query: Adjust for small screens */
+  @media (max-width: 600px) {
+    .container {
+      width: 70vw; /* Slightly larger on smaller screens */
+      max-width: 220px;
+    }
+    .status {
+      font-size: 1rem;
+    }
+    .square {
+      font-size: 1.3rem;
+    }
+  }
+  
+  /* Extra small screens */
+  @media (max-width: 400px) {
+    .container {
+      width: 85vw;
+      max-width: 200px;
+    }
+    .square {
+      font-size: 1rem;
+    }
+  }
+  
