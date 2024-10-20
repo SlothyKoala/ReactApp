@@ -1,78 +1,70 @@
 import { useState } from "react";
-import "../App.css"
+import { FaBars, FaTimes } from "react-icons/fa";
+import '../css/styles.css';
 
 interface NavBarProps {
   brandName: string;
   imageUrl: string;
   navItems: string[];
+  onNavItemClick: (item: string) => void;
 }
 
-function NavBar({ brandName, imageUrl, navItems }: NavBarProps) {
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+function NavBar({ brandName, imageUrl, navItems, onNavItemClick }: NavBarProps) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleNavClick = (index: number, item: string) => {
+    setSelectedIndex(index);
+    onNavItemClick(item);
+    setIsOpen(false);
+  };
 
   return (
-    <nav className="navbar navbar-expand-md navbar-dark bg-dark shadow">
-      <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+    <nav className="bg-gray-800 shadow-md">
+      <div className="container mx-auto flex justify-between items-center py-4">
+        <a className="flex items-center text-white" href="#">
           <img
             src={imageUrl}
             width="60"
             height="60"
-            className="d-inline-block align-center"
-            alt=""
+            className="inline-block"
+            alt="Logo"
           />
-          <span className="fw-bolder fs-4">{brandName}</span>
+          <span className="font-bold text-2xl ml-2">{brandName}</span>
         </a>
+        <div className="hidden md:flex md:items-center md:space-x-4">
+          {navItems.map((item, index) => (
+            <button
+              key={item}
+              className={`text-white hover:text-blue-400 transition duration-300 py-2 px-4 rounded-md ${selectedIndex === index ? "bg-blue-600" : ""}`}
+              onClick={() => handleNavClick(index, item)}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
         <button
-          className="navbar-toggler"
+          className="text-white focus:outline-none md:hidden"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
+          onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon"></span>
+          {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
-        <div
-          className="collapse navbar-collapse align-items-start flex-column flex-md-row"
-          id="navbarSupportedContent"
-        >
-          <ul className="navbar-nav me-auto mb-2 mb-md-1">
-            {navItems.map((items, index) => (
-              <li
-              key={items}
-              className="nav-item"
-              onClick={() => setSelectedIndex(index)}
+      </div>
+      <div className={`md:hidden transition-transform duration-300 ease-in-out ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+        <ul className="flex flex-col space-y-2 p-4">
+          {navItems.map((item, index) => (
+            <li key={item}>
+              <button
+                className={`text-white hover:text-blue-400 transition duration-300 py-2 px-4 rounded-md ${selectedIndex === index ? "bg-blue-600" : ""}`}
+                onClick={() => handleNavClick(index, item)}
               >
-                <a
-                  className={
-                    selectedIndex === index
-                      ? "nav-link active fw-bold"
-                      : "nav-link"
-                  }
-                  href="#"
-                >
-                  {items}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <form className="d-flex me-3 end" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button
-              className="btn btn-outline-success my-2 my-sm-0"
-              type="submit"
-            >
-              Search
-            </button>
-          </form>
-        </div>
+                {item}
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     </nav>
   );
