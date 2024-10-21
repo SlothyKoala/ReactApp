@@ -1,54 +1,74 @@
-import { useState, useEffect } from "react";
-import '../css/popupEditor.css'
+import React, { useState } from "react";
+import { Note } from "../pages/DragnDrop";
+import "../css/popupEditor.css";
 
 interface PopupEditorProps {
+  note: Note | null;
+  onAddNote: (newNote: Note) => void;
+  onEditNote: (updatedNote: Note) => void;
   onClose: () => void;
-  onAddNote: (note: string) => void;
-  onUpdateNote?: (note: string) => void;
-  initialText?: string;
 }
 
 const PopupEditor: React.FC<PopupEditorProps> = ({
-  onClose,
+  note,
   onAddNote,
-  onUpdateNote,
-  initialText = "",
+  onEditNote,
+  onClose,
 }) => {
-  const [text, setText] = useState(initialText);
+  const [header, setHeader] = useState(note ? note.header : "");
+  const [body, setBody] = useState(note ? note.body : "");
 
-  useEffect(() => {
-    setText(initialText);
-  }, [initialText]);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newNote: Note = {
+      id: note ? note.id : Date.now().toString(),
+      header,
+      body,
+    };
+
+    if (note) {
+      onEditNote(newNote);
+    } else {
+      onAddNote(newNote);
+    }
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-gray-800 p-6 rounded-md shadow-md w-96">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="w-full h-40 p-2 rounded bg-gray-900 text-gray-300"
-        />
-        <div className="mt-4 flex justify-end space-x-2">
-          <button
-            onClick={onClose}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => {
-              if (onUpdateNote) {
-                onUpdateNote(text);
-              } else {
-                onAddNote(text);
-              }
-              onClose();
-            }}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Save
-          </button>
-        </div>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-lg font-bold text-gray-300 mb-4">
+          {note ? "Edit Note" : "Add Note"}
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={header}
+            onChange={(e) => setHeader(e.target.value)}
+            placeholder="Header"
+            className="w-full p-2 mb-3 border border-blue-600 rounded bg-gray-700 text-gray-300 focus:outline-none focus:border-blue-400 transition duration-200"
+          />
+          <textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Body"
+            className="w-full p-2 mb-3 border border-blue-600 rounded bg-gray-700 text-gray-300 focus:outline-none focus:border-blue-400 transition duration-200"
+          />
+          <div className="flex justify-end space-x-2">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500 transition duration-200"
+            >
+              {note ? "Update" : "Add"} Note
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-500 transition duration-200"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
