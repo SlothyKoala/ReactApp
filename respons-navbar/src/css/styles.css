@@ -61,3 +61,34 @@
 .slide-out-right {
   animation: slideOutRight 0.8s ease forwards;
 }
+
+.bg-blue-600 {
+  background-color: #3b82f6;
+}
+
+.bg-gray-800 {
+  background-color: #1f2937;
+}
+
+.bg-gray-900 {
+  background-color: #111827;
+}
+
+.text-gray-300 {
+  color: #d1d5db;
+}
+
+.text-gray-400 {
+  color: #9ca3af;
+}
+
+input,
+textarea {
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+input:focus,
+textarea:focus {
+  background-color: #1f2937;
+  border-color: #3b82f6;
+}
