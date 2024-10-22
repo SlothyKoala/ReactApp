@@ -55,11 +55,13 @@ const DragnDrop: React.FC = () => {
   };
 
   const handleDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
+    const { source, destination } = result;
+
+    if (!destination || source.index === destination.index) return;
 
     const reorderedNotes = Array.from(notes);
-    const [movedNote] = reorderedNotes.splice(result.source.index, 1);
-    reorderedNotes.splice(result.destination.index, 0, movedNote);
+    const [movedNote] = reorderedNotes.splice(source.index, 1);
+    reorderedNotes.splice(destination.index, 0, movedNote);
 
     setNotes(reorderedNotes);
   };
@@ -74,39 +76,45 @@ const DragnDrop: React.FC = () => {
       </button>
 
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="notes">
+        <Droppable droppableId="notes" direction="vertical">
           {(provided) => (
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               {notes.map((note, index) => (
                 <Draggable key={note.id} draggableId={note.id} index={index}>
-                  {(provided) => (
+                  {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      className="relative bg-gray-800 p-4 rounded-lg shadow-lg transform transition-transform duration-200"
+                      className={`relative bg-gray-700 rounded-md shadow-md transition-transform duration-100 
+                      ${snapshot.isDragging ? "z-50 scale-105" : ""}`}
+                      style={provided.draggableProps.style}
                     >
-                      <div className="absolute right-2 top-2">
-                        <DotsVerticalIcon className="h-5 w-5 text-gray-400 cursor-pointer" />
-                      </div>
-                      <div className="font-bold text-lg text-gray-300 mb-1">
-                        {note.header}
-                      </div>
-                      <div className="text-gray-200 mb-2">{note.body}</div>
-                      <div className="absolute right-2 bottom-2 space-x-2">
-                        <button onClick={() => handleOpenEditor(note)}>
-                          <PencilIcon className="h-5 w-5 text-blue-500" />
-                        </button>
-                        <button onClick={() => handleViewNote(note)}>
-                          <EyeIcon className="h-5 w-5 text-green-500" />
-                        </button>
-                        <button onClick={() => handleDeleteNote(note.id)}>
-                          <TrashIcon className="h-5 w-5 text-red-500" />
-                        </button>
+                      <div className="w-full max-w-sm h-28 p-4 overflow-hidden">
+                        <div className="absolute right-2 top-2">
+                          <DotsVerticalIcon className="h-5 w-5 text-gray-400 cursor-pointer" />
+                        </div>
+                        <div className="font-bold text-lg text-gray-300 mb-2 truncate">
+                          {note.header}
+                        </div>
+                        <div className="text-gray-200 mb-2 max-h-24 overflow-y-auto">
+                          {note.body}
+                        </div>
+                        <div className="absolute right-2 bottom-2 space-x-2">
+                          <button onClick={() => handleOpenEditor(note)}>
+                            <PencilIcon className="h-5 w-5 text-blue-500" />
+                          </button>
+                          <button onClick={() => handleViewNote(note)}>
+                            <EyeIcon className="h-5 w-5 text-green-500" />
+                          </button>
+                          <button onClick={() => handleDeleteNote(note.id)}>
+                            <TrashIcon className="h-5 w-5 text-red-500" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -138,4 +146,4 @@ const DragnDrop: React.FC = () => {
   );
 };
 
-export default DragnDrop;
+export default DragnDrop
