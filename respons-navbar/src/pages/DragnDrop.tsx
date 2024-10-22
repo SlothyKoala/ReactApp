@@ -10,7 +10,6 @@ import PopupView from "../components/PopupView";
 import {
   PencilIcon,
   EyeIcon,
-  DotsVerticalIcon,
   TrashIcon,
 } from "@heroicons/react/solid";
 import "../css/notebook.css";
@@ -81,7 +80,7 @@ const DragnDrop: React.FC = () => {
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="flex flex-col gap-6"
             >
               {notes.map((note, index) => (
                 <Draggable key={note.id} draggableId={note.id} index={index}>
@@ -90,29 +89,28 @@ const DragnDrop: React.FC = () => {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      className={`relative bg-gray-700 rounded-md shadow-md transition-transform duration-100 
-                      ${snapshot.isDragging ? "z-50 scale-105" : ""}`}
-                      style={provided.draggableProps.style}
+                      className={`bg-gray-800 rounded-md p-4 shadow-md transition-transform duration-100 ${
+                        snapshot.isDragging ? "z-50 scale-105" : ""
+                      }`}
                     >
-                      <div className="w-full max-w-sm h-28 p-4 overflow-hidden">
+                      <div className="relative bg-gray-700 p-4 rounded-md transition-transform duration-100">
                         <div className="absolute right-2 top-2">
-                          <DotsVerticalIcon className="h-5 w-5 text-gray-400 cursor-pointer" />
+                          <button onClick={() => handleDeleteNote(note.id)}>
+                            <TrashIcon className="h-5 w-5 text-red-500" />
+                          </button>
                         </div>
                         <div className="font-bold text-lg text-gray-300 mb-2 truncate">
                           {note.header}
                         </div>
-                        <div className="text-gray-200 mb-2 max-h-24 overflow-y-auto">
+                        <div className="text-gray-200 mb-2 max-h-24 overflow-y-auto break-words">
                           {note.body}
                         </div>
-                        <div className="absolute right-2 bottom-2 space-x-2">
+                        <div className="absolute left-2 bottom-2 flex space-x-2">
                           <button onClick={() => handleOpenEditor(note)}>
                             <PencilIcon className="h-5 w-5 text-blue-500" />
                           </button>
                           <button onClick={() => handleViewNote(note)}>
                             <EyeIcon className="h-5 w-5 text-green-500" />
-                          </button>
-                          <button onClick={() => handleDeleteNote(note.id)}>
-                            <TrashIcon className="h-5 w-5 text-red-500" />
                           </button>
                         </div>
                       </div>
@@ -146,4 +144,4 @@ const DragnDrop: React.FC = () => {
   );
 };
 
-export default DragnDrop
+export default DragnDrop;
