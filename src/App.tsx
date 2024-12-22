@@ -40,7 +40,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar
-        brandName="NavBar Project"
+        brandName="React Project"
         imageUrl={imagePath}
         navItems={items}
         onNavItemClick={handleNavItemClick}
